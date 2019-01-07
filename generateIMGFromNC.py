@@ -5,9 +5,9 @@ import json
 import urllib
 import boto3
 
-input_bucket_name = 'samplenc'
-output_bucket_name = 'weather-imgbucket'
-sqsqueue_name = 'ncfile-listener-queue'
+input_bucket_name = 'myS3InputBucket'
+output_bucket_name = 'myS3OutputBucket'
+sqsqueue_name = 'SQSListenerQueue'
 aws_region = 'eu-west-2'
 
 s3 = boto3.client('s3', region_name=aws_region)

@@ -60,7 +60,7 @@
     "SQSListenerQueue" : {
       "Type" : "AWS::SQS::Queue",
       "Properties" : {
-         "QueueName" : "SQSListenerQueue",
+         "QueueName" : "ncfile-listener-queue",
          "RedrivePolicy" : { "deadLetterTargetArn" : { "Fn::GetAtt" : ["SQSDeadLetterQueue", "Arn"] }, "maxReceiveCount" : "5" }
       }
     },
@@ -103,7 +103,7 @@
          "AlarmDescription" : "Scale ECS Service based on SQS queue depth",
          "AlarmName" : "SQSQueueDepth",
          "ComparisonOperator" : "GreaterThanOrEqualToThreshold",
-         "Dimensions" : [ { "Name": "QueueName", "Value": "SQSListenerQueue"} ],
+         "Dimensions" : [ { "Name": "QueueName", "Value": "ncfile-listener-queue"} ],
          "EvaluationPeriods" : "1",
          "MetricName" : "ApproximateNumberOfMessagesVisible",
          "Namespace" : "AWS/SQS",
@@ -115,11 +115,17 @@
     },
 
     "myS3InputBucket" : {
-      "Type" : "AWS::S3::Bucket"
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName" : "samplenc"
+      }
     },
 
     "myS3OutputBucket" : {
-      "Type" : "AWS::S3::Bucket"
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName" : "weather-imgbucket"
+      }
     },
 
     "ECSCluster": {
@@ -151,7 +157,7 @@
             },
             {
             "Name": "SQSListenerQueue",
-            "Value": "SQSListenerQueue"
+            "Value": "ncfile-listener-queue"
             }
           ]
         }]

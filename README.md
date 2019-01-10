@@ -2,6 +2,8 @@
 
 This architecture shows how to process incoming netCDF files, generate images and provide realtime weather forecast data via Restful APIs. 
 
+![](architecture.png)
+
 The [AWS CloudFormation](https://aws.amazon.com/cloudformation) template included in this example creates an input and an output [Amazon S3](https://aws.amazon.com/s3) bucket, an [Amazon SQS](https://aws.amazon.com/sqs/) queue, an [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/) alarm, an [ECS](https://aws.amazon.com/ecs/) cluster, an ECS task definition, and a DynamoDB table.
 
 NetCDF files(.nc) uploaded to the input S3 bucket trigger an event that sends object details to the SQS queue. The ECS task deploys a Docker container that reads from that queue, parses the message containing the object name and then generate a image. Once transformed it will upload the objects to the S3 output bucket and put related metadata (such as location, forecast_time, s3 object url) to the dynamodb table.

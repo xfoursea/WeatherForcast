@@ -23,6 +23,7 @@ To run the entire example, first clone the source repository, using the followin
   `$ git clone https://github.com/xfoursea/WeatherForcast.git`
 
 Docker login to ECR:
+
   `$(aws ecr get-login --no-include-email --region eu-west-2)`
 
 Build the Docker image:
@@ -30,6 +31,7 @@ Build the Docker image:
   `$ docker build -t <repo>/<image> .`
 
 Tag the image:
+
   `docker tag rxurepo:latest <account>.dkr.ecr.eu-west-2.amazonaws.com/<repo>:latest`
 
 Push the image to ECR:

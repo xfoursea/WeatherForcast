@@ -2,7 +2,7 @@
 
 This architecture shows how to process incoming netCDF files, generate images and provide realtime weather forecast data via Restful APIs. 
 
-![](architecture.png)
+![](https://github.com/xfoursea/WeatherForcast/blob/master/architeture.png)
 
 The [AWS CloudFormation](https://aws.amazon.com/cloudformation) template included in this example creates an input and an output [Amazon S3](https://aws.amazon.com/s3) bucket, an [Amazon SQS](https://aws.amazon.com/sqs/) queue, an [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/) alarm, an [ECS](https://aws.amazon.com/ecs/) cluster, an ECS task definition, and a DynamoDB table.
 

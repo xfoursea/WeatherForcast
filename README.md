@@ -1,12 +1,10 @@
 # WeatherForcast Reference Architecture
 
-This architecture shows how to process NetCDF files newly arrived to a s3 bucket. Images are generated and saved to the target S3 bucket; related metadata (such as location, forecast_time, s3 object url) are put into a DynamoDB table.
-
-An API gateway then exposes queries on the saved weather forecast content via RESTful APIs.
+This architecture shows how to process incoming netCDF files, generate images and provide realtime weather forecast data via Restful APIs. 
 
 The [AWS CloudFormation](https://aws.amazon.com/cloudformation) template included in this example creates an input and an output [Amazon S3](https://aws.amazon.com/s3) bucket, an [Amazon SQS](https://aws.amazon.com/sqs/) queue, an [Amazon CloudWatch](https://aws.amazon.com/cloudwatch/) alarm, an [ECS](https://aws.amazon.com/ecs/) cluster, an ECS task definition, and a DynamoDB table.
 
-NetCDF files(.nc) uploaded to the input S3 bucket trigger an event that sends object details to the SQS queue. The ECS task deploys a Docker container that reads from that queue, parses the message containing the object name and then downloads the object. Once transformed it will upload the objects to the S3 output bucket and put metadata to the dynamodb table.
+NetCDF files(.nc) uploaded to the input S3 bucket trigger an event that sends object details to the SQS queue. The ECS task deploys a Docker container that reads from that queue, parses the message containing the object name and then generate a image. Once transformed it will upload the objects to the S3 output bucket and put related metadata (such as location, forecast_time, s3 object url) to the dynamodb table.
 
 You may use this sample NetCDF file: https://s3.eu-west-2.amazonaws.com/aws-earth-mo-examples/cafef7005477edb001aa7dc50eab78c5ef89d420.nc
 
@@ -26,7 +24,7 @@ Build the Docker image:
 
   `$ docker build -t <repo>/<image> .`
 
-Push the image:
+Push the image to ECR:
 
   `$ docker push`
 
@@ -85,32 +83,6 @@ To remove all resources created by this example, do the following:
 3. Delete the ECS cluster.
 4. Delete the EC2 Role.
 
-## CloudFormation template resources
-The following sections explain all of the resources created by the CloudFormation template provided with this example.
-
-- **myS3InputBucket** - An S3 bucket where objects (images with a .jpg suffix) can be uploaded to trigger the resize.
-
-- **myS3OutputBucket** - An S3 bucket where resized objects are stored with keys thumbs/ and resized/.
-
-- **SQSQueue** - A SQS queue that holds messages containing the name of the uploaded object.
-
-- **SQSDeadLetterQueue** - A SQS dead letter queue for messages that was unsuccessfully handled.
-
-- **ECSCluster** - An ECS cluster.
-
-- **SQSCloudWatchAlarm** - A CloudWatch Alarm for the SQS queue for the ApproximateNumberOfMessagesVisible metric.
-
-- **ECSAutoScalingGroup** - An Auto Scaling group used to create your instances.
-
-- **InstanceSecurityGroup** - Security Group to which your instances are added.
-
-- **TaskDefinition** - An ECS task definition that is started by the ECS service. The ECS task schedules a Docker container that copies the uploaded object and creates a thumbnail and a resized (1024x768) image file in the output S3 bucket.
-
-- **ECSServiceRole** -  An IAM role assumed by the ECS service, which gives the service the right to register instances to an Elastic Load Balancer if needed.
-
-- **EC2Role** - An IAM role assumed by the EC2 instances, which gives them the right to register themselves with the ECS services.
-
-- **ECSTaskRole** - An IAM role assumed by the ECS task. This role gives the Docker container the right to upload and fetch objects to and from S3 as well as read and delete messages from the SQS queue. By using an ECS task role, the underlying EC2 instances do not need to be given access rights to the resources that the container uses. For more information about IAM roles for tasks, see [IAM Roles for Tasks](http://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html).
-
+## API Gateway part is to be completed.
 
 

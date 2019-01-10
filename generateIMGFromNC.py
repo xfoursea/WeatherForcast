@@ -12,6 +12,7 @@ aws_region = 'eu-west-2'
 
 s3 = boto3.client('s3', region_name=aws_region)
 sqs = boto3.resource('sqs', region_name=aws_region)
+ddb = boto3.resource('dynamodb', region_name=aws_region)
 
 def generate_image(ncfile, imgfile):
     import iris
@@ -39,6 +40,18 @@ def upload_image(image):
     s3.upload_file(image,
                    output_bucket_name, image)
 
+def insert_to_table(location, forecast_time, image):
+    table = ddb.Table('weather-forcast-table')
+    print('insert_to_table starts')
+    table.put_item(
+       Item={
+         'location': location,
+         'forecast-time': forecast_time,
+         'reference-time': '2019-01-09 12:00:00',
+         'url': 's3://'+output_bucket_name+'/'+image
+       } 
+    )
+    print('insert_to_table finished')  
 
 def get_messages_from_sqs():
     results = []
@@ -71,6 +84,7 @@ def process_images():
             print('imgfile:'+imgfile)
             generate_image(ncfile,imgfile)
             upload_image(imgfile)
+            insert_to_table('London','20190109 18:00:00', imgfile) 
             os.remove(imgfile)
             os.remove(ncfile)
         except:

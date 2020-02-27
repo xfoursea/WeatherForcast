@@ -1,4 +1,4 @@
-# WeatherForcast Reference Architecture
+# WeatherForecast Reference Architecture
 
 This architecture shows how to process incoming netCDF files, generate images and provide realtime weather forecast data via Restful APIs. 
 
